@@ -3,7 +3,7 @@ import os
 from discord.ext import tasks, commands
 from collections import deque
 from dotenv import load_dotenv
-from embed_ui import *
+from embed_ui import embed
 
 load_dotenv()
 
@@ -35,6 +35,9 @@ class MyClient(discord.Client):
 
         if message.content == '!lobby':
             await self.print_lobby(message)
+
+        if message.content == '!test':
+            await message.channel.send(embed)
 
     async def add_to_lobby(self, message, manually_added_user=None):
         async def add_to_waiting_room():

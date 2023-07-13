@@ -1,8 +1,9 @@
 import discord
 import os
-from discord.ext import tasks
+from discord.ext import tasks, commands
 from collections import deque
 from dotenv import load_dotenv
+from embed_ui import *
 
 load_dotenv()
 
@@ -13,7 +14,7 @@ MY_CHANNEL = 989947070985162795
 
 class MyClient(discord.Client):
     def __init__(self, intents):
-        super().__init__(intents=intents)
+        super().__init__(command_prefix='$', intents=intents)
         self._lobby = set()
         self._queue = deque([])
 
@@ -35,17 +36,6 @@ class MyClient(discord.Client):
         if message.content == '!lobby':
             await self.print_lobby(message)
 
-        if message.content.startswith('!add '):
-            print(message.channel.members)
-            await message.channel.send('still cookin this')
-            # command_index = message.content.find("!")
-            # user = message.content[command_index + 5:].strip()
-            # await self.add_to_lobby(message, user)
-
-        if message.content.startswith('!remove '):
-            user = message.content[9:].strip()
-            await self.remove_from_lobby(message, user)
-
     async def add_to_lobby(self, message, manually_added_user=None):
         async def add_to_waiting_room():
             if message.author not in self._queue:
@@ -65,10 +55,6 @@ class MyClient(discord.Client):
         await self.print_lobby(message)
 
     async def remove_from_lobby(self, message, manual_remove_user=None):
-        user = message.author if manual_remove_user == None else \
-            [author for author in self._lobby if author.name == manual_remove_user][0]
-        # filter(lambda x: x.name == manual_remove_user, self._lobby)
-
         if message.author not in self._lobby and message.author not in self._queue:
             await message.channel.send('fuck off')
             return
@@ -107,7 +93,7 @@ class MyClient(discord.Client):
     @tasks.loop(minutes=30.0)
     async def lobby_check(self):
         if 1 <= len(self._lobby) and len(self._lobby) < MAX_LOBBY_SIZE:
-            channel = self.get_channel(PERRY_CHANNEL)
+            channel = self.get_channel(MY_CHANNEL)
 
             if len(self._lobby) == MAX_LOBBY_SIZE - 1:
                 await channel.send('NEED JUAN')
@@ -123,5 +109,6 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 client = MyClient(intents=intents)
-print(os.getenv('TOKEN'))
+
+
 client.run(os.getenv('TOKEN'))

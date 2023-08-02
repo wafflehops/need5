@@ -17,7 +17,8 @@ async def add_to_lobby(interaction):
     if len(lobby) < MAX_LOBBY_SIZE:
         await interaction.channel.send(f'need {MAX_LOBBY_SIZE - len(lobby)} val')
     else:
-        
+        pass
+
 
 
 async def remove_from_lobby(interaction):

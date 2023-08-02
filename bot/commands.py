@@ -53,7 +53,7 @@ def generate_lobby(lobby):
         embed.set_thumbnail(url=user.display_avatar)
         
 
-        embed.timestamp = join_times[user].utcnow()
+        embed.timestamp = join_times[user]
         embeds.append(embed)
 
     return embeds

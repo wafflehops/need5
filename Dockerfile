@@ -2,13 +2,11 @@ FROM python:3.11.0-alpine
 
 WORKDIR /app
 
-
 COPY requirements.txt /app/
 
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app/
-
 
 CMD sh -c 'if [ "$ENVIRONMENT" = "prod" ]; then \
               export CHAT_CHANNEL=1110385416021999707; \

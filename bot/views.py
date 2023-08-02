@@ -20,10 +20,10 @@ def need5_view():
     disband_button.callback = clear_lobby
 
     kiss_homies_button = Button(
-        label='Kiss the homies', style=discord.ButtonStyle.blurple)
+        label='Kiss the homies', style=discord.ButtonStyle.grey)
     kiss_homies_button.callback = kiss_the_homies
 
-    notify_button = Button(label='notify', style=discord.ButtonStyle.blurple)
+    notify_button = Button(label='notify', style=discord.ButtonStyle.grey)
     notify_button.callback = notify
 
     view = View()

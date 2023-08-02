@@ -1,6 +1,7 @@
 import os
 import discord
-from data.lobby import lobby, MAX_LOBBY_SIZE
+import datetime
+from data.lobby import lobby, join_times, MAX_LOBBY_SIZE
 from utils.helper_functions import is_notification
 
 
@@ -9,6 +10,7 @@ async def add_to_lobby(interaction):
 
     if len(lobby) < MAX_LOBBY_SIZE:
         lobby.add(user)
+        join_times[user] = interaction.created_at
 
     await interaction.response.edit_message(embeds=generate_lobby(lobby))
 
@@ -17,7 +19,8 @@ async def add_to_lobby(interaction):
     if len(lobby) < MAX_LOBBY_SIZE:
         await interaction.channel.send(f'need {MAX_LOBBY_SIZE - len(lobby)} val')
     else:
-        pass
+        for homie in lobby:
+            await homie.send(f'ASSEMBLE')
 
 
 
@@ -26,6 +29,7 @@ async def remove_from_lobby(interaction):
 
     if user in lobby:
         lobby.remove(user)
+        join_times.pop(user)
 
     await interaction.response.edit_message(embeds=generate_lobby(lobby))
 
@@ -47,7 +51,9 @@ def generate_lobby(lobby):
             title=f'{user.display_name}', colour=discord.Colour.random())
 
         embed.set_thumbnail(url=user.display_avatar)
+        
 
+        embed.timestamp = join_times[user].utcnow()
         embeds.append(embed)
 
     return embeds
